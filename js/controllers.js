@@ -11,10 +11,12 @@ app.controller('mainCtrl', function($scope, $localStorage) {
     var vals = ["Done!", "Finished!", "Killed it!", "Crushed it!", "Smashed it!", "Crushed", "Smashed", "Terminated"]
     var sayings = ["Done!", "Finished!", "Killed it!", "Crushed it!", "Keep going!", "Another one bites the dust!", "Killing it!", "Terminated"]
     
+    // So that when jQuery clears the input, the models value is reset
     $scope.wipeVal = function(){
         $scope.item = "";
     }
     
+    // Master reset for when things go wrong
     $scope.reset = function (){
         $scope.$store.todos = [];
         $scope.$store.progress = 0;
@@ -24,7 +26,7 @@ app.controller('mainCtrl', function($scope, $localStorage) {
         $scope.cog = "cog";
     }
     
-    // Defualts
+    // Defualts for local stroage
     $scope.$store = $localStorage;
     
     $scope.$store = $localStorage.$default({
@@ -33,7 +35,7 @@ app.controller('mainCtrl', function($scope, $localStorage) {
         masterProgress:0
     });
     
-    
+    // Depends on if it shows buttons or not
     if($scope.$store.masterProgress == 100){
         $scope.showDone = true;
         $scope.showGuide = true;
@@ -42,19 +44,20 @@ app.controller('mainCtrl', function($scope, $localStorage) {
     }
     
     $scope.message = $scope.$store.progress.toString()+"%";
-    
+    // So that this stuff only gets run when todos are already stored.
     if ($scope.$store.todos!=[]){
         
         $scope.item="";
         $scope.weight="5%";
-        
+        // The effect of the star pulsing and cod hiding
         if ($scope.$store.progress == 95){
             $scope.cog="hide";
             $scope.star = "pulse";
         }
         
         $scope.progressStyle = $scope.$store.progress.toString()+"%";
-
+        
+        // Gen the list of % values in the <selection>
         var range = [];
         for(var i=1;i<105;i++){
             if (i%5 == 0){
@@ -65,14 +68,15 @@ app.controller('mainCtrl', function($scope, $localStorage) {
         
         $scope.range = range;
         
-        
+        // Save function
         $scope.saveTodo = function(name, weight){
             if (name != ""){
                 
-                
+                // Just take the int
                 weight = weight.split("%");
                 weight = parseInt(weight);
                 
+                //Check to see if the master progress is over 100% 
                 if($scope.$store.masterProgress + weight > 100){
                     $scope.message = "Select a lower %!";
                 } else{
@@ -85,7 +89,7 @@ app.controller('mainCtrl', function($scope, $localStorage) {
                     $scope.sayingStyle="";
 
 
-
+                    // Show the buttons to check off todos
                     if($scope.$store.masterProgress == 100){
                         $scope.showDone = true;
                         $scope.showGuide = true;
@@ -94,7 +98,7 @@ app.controller('mainCtrl', function($scope, $localStorage) {
 
                     }
 
-
+                    // Only add a todo if total progress is under 100%
                     if ($scope.$store.masterProgress <= 100){
 
                         id += 1; 
@@ -103,7 +107,7 @@ app.controller('mainCtrl', function($scope, $localStorage) {
 
                         $scope.$store.todos.push({name, weight, val, id});
 
-                        //console.log($scope.$store.todos);
+                        
                         $scope.sayingStyle="";
                         $scope.saying="";
                         $scope.item = "";
@@ -119,12 +123,14 @@ app.controller('mainCtrl', function($scope, $localStorage) {
 
         }
         
+        // When checking off the todo
         $scope.doneTodo = function(name, weight, id){
             
             $scope.$store.progress += parseInt(weight);
             
-            console.log("LENGTH: " + $scope.$store.todos.length.toString());
+            //console.log("LENGTH: " + $scope.$store.todos.length.toString());
             
+            // When total progress is 95% add effects
             if ($scope.$store.progress >= 95){
                 $scope.cog="hide";
                 $scope.star = "pulse";
@@ -135,8 +141,8 @@ app.controller('mainCtrl', function($scope, $localStorage) {
             
             
             
-             //$scope.$store.progress.toString()+"%";
-            console.log($scope.$store.progress);
+            
+            //console.log($scope.$store.progress);
             
             if ($scope.$store.progress >= 100){
                 

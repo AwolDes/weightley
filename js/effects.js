@@ -1,3 +1,9 @@
+/*
+
+    jQuery effects.
+
+
+*/ 
 $( "document" ).ready(function() {
     $("#title").animate({
         opacity:"1"
